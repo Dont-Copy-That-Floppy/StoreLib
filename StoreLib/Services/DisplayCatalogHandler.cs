@@ -13,11 +13,11 @@ namespace StoreLib.Services
         private readonly MSHttpClient _httpClient;
 
         public DisplayCatalogModel ProductListing { get; internal set; }
-        public Exception Error { get; internal set; } 
+        public Exception Error { get; internal set; }
         internal Uri ConstructedUri { get; set; }
-        public DCatEndpoint SelectedEndpoint; 
+        public DCatEndpoint SelectedEndpoint;
         public DisplayCatalogResult Result { get; internal set; }
-        public DeviceFamily DeviceFamily; 
+        public DeviceFamily DeviceFamily;
         public DCatSearch SearchResult { get; internal set; }
         public string ID;
         public Locale SelectedLocale;
@@ -52,7 +52,7 @@ namespace StoreLib.Services
             FE3Handler.ProcessUpdateIDs(xml, out RevisionIDs, out PackageNames, out UpdateIDs);
             IList<PackageInstance> PackageInstances = await FE3Handler.GetPackageInstancesAsync(xml);
             IList<Uri> Files = await FE3Handler.GetFileUrlsAsync(UpdateIDs, RevisionIDs, MSAToken);
-            foreach(PackageInstance package in PackageInstances)
+            foreach (PackageInstance package in PackageInstances)
             {
                 int id = PackageInstances.IndexOf(package);
                 package.PackageUri = Files[id];
@@ -170,23 +170,23 @@ namespace StoreLib.Services
                 throw new Exception($"Failed to search DisplayCatalog: {DeviceFamily.ToString()} Status Code: {httpResponse.StatusCode} Returned Data: {await httpResponse.Content.ReadAsStringAsync()}");
             }
         }
-        
-        public async Task<List<Addon>> GetAddonsForProductAsync()
+
+        public Task<List<Addon>> GetAddonsForProductAsync()
         {
-            if(this.IsFound == false)
+            if (this.IsFound == false)
             {
                 throw new Exception("Can not search for addons on a non-existant product.");
             }
             List<Addon> ProductAddons = new List<Addon>();
             List<string> ProductIDs = new List<string>();
             throw new NotImplementedException();
-            foreach(dynamic AddonData in this.ProductListing.Product.MarketProperties[0].RelatedProducts)
-            {
-                
-            }
+            // foreach(dynamic AddonData in this.ProductListing.Product.MarketProperties[0].RelatedProducts)
+            // {
+
+            // }
 
         }
-        
+
         /// <summary>
         ///  
         /// </summary>
@@ -247,5 +247,5 @@ namespace StoreLib.Services
         }
     }
 
-    
+
 }

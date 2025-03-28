@@ -59,7 +59,7 @@ namespace StoreLib.Tests
             DisplayCatalogHandler handler = DisplayCatalogHandler.ProductionConfig();
             await handler.QueryDCATAsync("9wzdncrfj3tj");
             Debug.WriteLine("Running GetPackageInstancesForNetflix");
-            string WUID = "d8d75bb2-c5cd-44f2-8c26-c1d1ae5b13fa";
+            //string WUID = "d8d75bb2-c5cd-44f2-8c26-c1d1ae5b13fa";
             var packageinstances = await handler.GetPackagesForProductAsync();
             foreach (var item in packageinstances)
             {

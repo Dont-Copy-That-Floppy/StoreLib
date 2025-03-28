@@ -26,16 +26,16 @@ namespace StoreLib.Cli
         [Option('m', "market", Required = false, Default = Market.US, HelpText = "Market (e.g. US)")]
         public Market Market { get; set; }
 
-        [Option('l', "lang", Required = false, Default=Lang.en, HelpText = "Language (e.g. EN)")]
+        [Option('l', "lang", Required = false, Default = Lang.en, HelpText = "Language (e.g. EN)")]
         public Lang Language { get; set; }
 
-        [Option('e', "env", Required = false, Default=DCatEndpoint.Production, HelpText = "Environment (e.g. Production)")]
+        [Option('e', "env", Required = false, Default = DCatEndpoint.Production, HelpText = "Environment (e.g. Production)")]
         public DCatEndpoint Environment { get; set; }
 
-        [Option('t', "idtype", Required = false, Default=IdentiferType.ProductID, HelpText = "IdentifierType")]
+        [Option('t', "idtype", Required = false, Default = IdentiferType.ProductID, HelpText = "IdentifierType")]
         public IdentiferType IdType { get; set; }
 
-        [Option('f', "devicefamily", Required = false, Default=DeviceFamily.Desktop, HelpText = "Device Family (used for search)")]
+        [Option('f', "devicefamily", Required = false, Default = DeviceFamily.Desktop, HelpText = "Device Family (used for search)")]
         public DeviceFamily DeviceFamily { get; set; }
 
         [Value(0, MetaName = "command", Required = true,
@@ -51,7 +51,8 @@ namespace StoreLib.Cli
         static void Main(string[] args)
         {
             var parser = new Parser(
-                with => {
+                with =>
+                {
                     with.HelpWriter = Console.Error;
                     with.AutoHelp = true;
                     with.CaseInsensitiveEnumValues = true;

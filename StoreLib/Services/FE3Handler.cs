@@ -32,7 +32,7 @@ namespace StoreLib.Services
             httpRequest.RequestUri = Endpoints.FE3Delivery;
             httpRequest.Content = httpContent;
             httpRequest.Method = HttpMethod.Post;
-            HttpResponseMessage httpResponse = await _httpClient.SendAsync(httpRequest,  new System.Threading.CancellationToken());
+            HttpResponseMessage httpResponse = await _httpClient.SendAsync(httpRequest, new System.Threading.CancellationToken());
             string content = await httpResponse.Content.ReadAsStringAsync();
             content = HttpUtility.HtmlDecode(content);
             return content;
@@ -51,23 +51,31 @@ namespace StoreLib.Services
             return await GetPackageInstancesAsync(content);
         }
 
-        public static async Task<IList<PackageInstance>> GetPackageInstancesAsync(string content)
+        public static Task<IList<PackageInstance>> GetPackageInstancesAsync(string content)
         {
             IList<PackageInstance> PackageInstances = new List<PackageInstance>();
             XmlDocument doc = new XmlDocument();
             doc.LoadXml(content);
             XmlNodeList nodes = doc.GetElementsByTagName("AppxMetadata");
-            foreach(XmlNode node in nodes)
+
+            foreach (XmlNode node in nodes)
             {
-                if(node.Attributes.Count >= 3)
+                if (node.Attributes.Count >= 3)
                 {
-                    PackageInstance package = new PackageInstance(node.Attributes.GetNamedItem("PackageMoniker").Value, new Uri("http://test.com"), Utilities.TypeHelpers.StringToPackageType(node.Attributes.GetNamedItem("PackageType").Value), JsonConvert.DeserializeObject<ApplicabilityBlob>(node.FirstChild.InnerText), "");
+                    var package = new PackageInstance(
+                        node.Attributes.GetNamedItem("PackageMoniker").Value,
+                        new Uri("http://test.com"),
+                        Utilities.TypeHelpers.StringToPackageType(node.Attributes.GetNamedItem("PackageType").Value),
+                        JsonConvert.DeserializeObject<ApplicabilityBlob>(node.FirstChild.InnerText),
+                        ""
+                    );
                     PackageInstances.Add(package);
                 }
             }
-            return PackageInstances;
 
+            return Task.FromResult(PackageInstances);
         }
+
 
         /// <summary>
         /// Gets a FE3 Cookie, required for all FE3 requests.
@@ -81,7 +89,7 @@ namespace StoreLib.Services
             httpRequest.RequestUri = Endpoints.FE3Delivery;
             httpRequest.Content = httpContent;
             httpRequest.Method = HttpMethod.Post;
-            HttpResponseMessage httpResponse = await _httpClient.SendAsync(httpRequest, new System.Threading.CancellationToken()); 
+            HttpResponseMessage httpResponse = await _httpClient.SendAsync(httpRequest, new System.Threading.CancellationToken());
             doc.LoadXml(await httpResponse.Content.ReadAsStringAsync());
             XmlNodeList xmlNodeList = doc.GetElementsByTagName("EncryptedData");
             string cookie = xmlNodeList[0].InnerText;
@@ -98,7 +106,7 @@ namespace StoreLib.Services
         {
             XmlDocument doc = new XmlDocument();
             doc.LoadXml(Xml);
-            UpdateIDs = new List<string>(); 
+            UpdateIDs = new List<string>();
             PackageNames = new List<string>();
             RevisionIDs = new List<string>();
             XmlNodeList nodes = doc.GetElementsByTagName("SecuredFragment"); //We need to find updateIDs that actually have a File URL. Only nodes that have SecuredFragment will have an UpdateID that connects to a url. 
@@ -127,7 +135,7 @@ namespace StoreLib.Services
                 httpRequest.RequestUri = Endpoints.FE3DeliverySecured;
                 httpRequest.Content = httpContent;
                 httpRequest.Method = HttpMethod.Post;
-                HttpResponseMessage httpResponse = await _httpClient.SendAsync(httpRequest, new System.Threading.CancellationToken()); 
+                HttpResponseMessage httpResponse = await _httpClient.SendAsync(httpRequest, new System.Threading.CancellationToken());
                 doc.LoadXml(await httpResponse.Content.ReadAsStringAsync());
                 XmlNodeList XmlUrls = doc.GetElementsByTagName("FileLocation");
                 foreach (XmlNode node in XmlUrls)
